@@ -18,6 +18,8 @@ using Persistence;
 using Application.Core;
 using AutoMapper;
 using API.Extensions;
+using FluentValidation.AspNetCore;
+using API.Middleware;
 
 namespace API
 {
@@ -35,7 +37,10 @@ namespace API
         //Not going to use it in great detail. We have postman
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation(config => 
+            {
+                config.RegisterValidatorsFromAssemblyContaining<Create>();
+            });
             services.AddApplicationServices(_config);
             
         }
@@ -44,9 +49,10 @@ namespace API
         //API Project
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMiddleware<ExceptionMiddleware>();
+
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }

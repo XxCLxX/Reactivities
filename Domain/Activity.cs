@@ -4,8 +4,6 @@ namespace Domain
 {
     public class Activity
     {
-        //generate from the client or server side
-        //Use as primary key
         public Guid Id { get; set; }
 
         public string Title { get; set; }
